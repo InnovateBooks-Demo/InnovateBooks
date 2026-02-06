@@ -20,7 +20,7 @@ db_name = os.environ.get('DB_NAME', 'innovate_books_db')
 client = AsyncIOMotorClient(mongo_url)
 db = client[db_name]
 
-JWT_SECRET = os.environ.get('JWT_SECRET_KEY', 'innovate_books_super_secret_key_2025_change_in_production')
+JWT_SECRET = os.environ["JWT_SECRET_KEY"]  # must be set in backend/.env
 
 
 async def get_current_user(authorization: str = Header(None)):

@@ -17,7 +17,7 @@ load_dotenv()
 
 router = APIRouter(prefix="/api/ib-finance/ml-reconcile", tags=["ML Bank Reconciliation"])
 
-JWT_SECRET = os.environ.get('JWT_SECRET_KEY', 'innovate_books_super_secret_key_2025_change_in_production')
+JWT_SECRET = os.environ["JWT_SECRET_KEY"]  # must be set in backend/.env
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
 
 

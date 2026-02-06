@@ -19,7 +19,7 @@ router = APIRouter(prefix="/super-admin", tags=["Super Admin"])
 from server import db, pwd_context
 
 # JWT configuration (same as enterprise auth)
-JWT_SECRET = os.environ.get('JWT_SECRET_KEY', 'innovate_books_super_secret_key_2025_change_in_production')
+JWT_SECRET = os.environ["JWT_SECRET_KEY"]  # must be set in backend/.env
 JWT_ALGORITHM = os.environ.get('JWT_ALGORITHM', 'HS256')
 security = HTTPBearer()
 
