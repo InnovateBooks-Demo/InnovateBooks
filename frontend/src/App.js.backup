@@ -1,0 +1,818 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { WebRTCProvider } from './context/WebRTCContext';
+import './App.css';
+import { authService } from './utils/auth';
+import { Toaster } from './components/ui/sonner';
+import LandingPage from './pages/LandingPage';
+import MainLayout from './components/layout/MainLayout';
+import Dashboard from './pages/DashboardRedesigned';
+import CashFlowActuals from './pages/CashFlow/ActualsPro';
+import CashFlowBudgeting from './pages/CashFlow/Budgeting';
+import CashFlowForecasting from './pages/CashFlow/Forecasting';
+import CashFlowVariance from './pages/CashFlow/Variance';
+import Customers from './pages/CustomersRedesigned';
+import Vendors from './pages/VendorsRedesigned';
+import Invoices from './pages/InvoicesRedesigned';
+import Bills from './pages/BillsRedesigned';
+import CustomerDetail from './pages/CustomerDetailRedesigned';
+import AgingDSO from './pages/AgingDSORedesigned';
+import CreateInvoice from './pages/CreateInvoiceNew';
+import InvoiceDetail from './pages/InvoiceDetailRedesigned';
+import FinancialReporting from './pages/FinancialReporting';
+import ProfitLoss from './pages/ProfitLoss';
+import BalanceSheet from './pages/BalanceSheet';
+import CashFlowStatementReport from './pages/CashFlowStatement';
+import TrialBalance from './pages/TrialBalance';
+import GeneralLedger from './pages/GeneralLedger';
+import Collections from './pages/CollectionsRedesigned';
+import VendorDetail from './pages/VendorDetailRedesigned';
+import CreateBill from './pages/CreateBillNew';
+import BillDetail from './pages/BillDetailRedesigned';
+import AgingDPO from './pages/AgingDPORedesigned';
+import Payments from './pages/PaymentsRedesigned';
+import EditCustomerPage from './pages/EditCustomerPage';
+import EditVendorPage from './pages/EditVendorPage';
+import AddCustomerPage from './pages/AddCustomerPage';
+import AddVendorPage from './pages/AddVendorPage';
+import BankingAccounts from './pages/Banking/AccountsRedesigned';
+import BankingTransactions from './pages/Banking/TransactionsRedesigned';
+import BankingMatching from './pages/Banking/MatchingRedesigned';
+import ManageBanks from './pages/Banking/ManageBanks';
+import Reports from './pages/Reports';
+import Settings from './pages/Settings';
+import AdjustmentEntries from './pages/AdjustmentEntries';
+import CreateAdjustmentEntry from './pages/CreateAdjustmentEntry';
+import AdjustmentEntryDetail from './pages/AdjustmentEntryDetail';
+// Public Website Pages
+import Home from './pages/HomeNew';
+import SolutionsIndex from './pages/SolutionsIndex';
+import CommerceSolution from './pages/CommerceSolutionElite';
+import WorkforceSolution from './pages/WorkforceSolution';
+import CapitalSolution from './pages/CapitalSolution';
+import OperationsSolution from './pages/OperationsSolution';
+import FinanceSolution from './pages/FinanceSolution';
+import InsightsIndex from './pages/InsightsIndex';
+import IntelligencePage from './pages/IntelligencePage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+// IB Commerce Module
+import CommerceLayout from './pages/commerce/CommerceLayout';
+import CommerceDashboard from './pages/commerce/CommerceDashboardPremium';
+import CommerceLogin from './pages/commerce/CommerceLogin';
+import CommerceProfile from './pages/commerce/CommerceProfile';
+// IB Finance Module
+import FinanceLayout from './pages/finance/FinanceLayout';
+import FinanceDashboard from './pages/finance/FinanceDashboard';
+// Lead Module - Elite Design
+import LeadList from './pages/commerce/lead/LeadList';
+import LeadCreate from './pages/commerce/lead/LeadCreate';
+import LeadDetail from './pages/commerce/lead/LeadDetail';
+import LeadAutomationPage from './pages/commerce/lead/LeadAutomationPage';
+import LeadEdit from './pages/commerce/lead/LeadEditNew';
+import LeadEngagement from './pages/commerce/lead/LeadEngagement';
+// Manufacturing Masters
+import MasterDashboard from './pages/manufacturing/masters/MasterDashboard';
+import MasterList from './pages/manufacturing/masters/MasterList';
+import AnalyticsDashboard from './pages/manufacturing/analytics/AnalyticsDashboard';
+import MasterDataView from './pages/manufacturing/MasterDataView';
+// Auth Pages
+import LoginPage from './pages/auth/LoginPage';
+import SignupPage from './pages/auth/SignupPage';
+// Workspace
+import WorkspaceLayoutNew from './pages/workspace/WorkspaceLayoutNew';
+import WorkspaceDashboard from './pages/workspace/WorkspaceDashboardPremium';
+import ReportsDashboard from './pages/reports/ReportsDashboard';
+import IBChatPremium from './pages/workspace/IBChatPremium';
+import WorkspaceSettings from './pages/workspace/WorkspaceSettings';
+import './styles/design-system.css';
+// Evaluate Module - Elite Design
+import EvaluateList from './pages/commerce/evaluate/EvaluateListElite';
+import EvaluateCreate from './pages/commerce/evaluate/EvaluateCreateElite';
+import EvaluateDetail from './pages/commerce/evaluate/EvaluateDetailElite';
+import EvaluateEdit from './pages/commerce/evaluate/EvaluateEditNew';
+// Commit Module - Elite Design
+import CommitList from './pages/commerce/commit/CommitListElite';
+import CommitCreate from './pages/commerce/commit/CommitCreateElite';
+import CommitDetail from './pages/commerce/commit/CommitDetailElite';
+import CommitEdit from './pages/commerce/commit/CommitEditNew';
+// Execute Module - Elite Design
+import ExecuteList from './pages/commerce/execute/ExecuteListElite';
+import ExecuteCreate from './pages/commerce/execute/ExecuteCreateElite';
+import ExecuteDetail from './pages/commerce/execute/ExecuteDetailElite';
+import ExecuteEdit from './pages/commerce/execute/ExecuteEditNew';
+// Bill Module - Elite Design
+import CommerceBillList from './pages/commerce/bill/BillListElite';
+import CommerceBillCreate from './pages/commerce/bill/BillCreateElite';
+import CommerceBillDetail from './pages/commerce/bill/BillDetailElite';
+import CommerceBillEdit from './pages/commerce/bill/BillEditNew';
+// Collect Module - Elite Design
+import CollectList from './pages/commerce/collect/CollectListElite';
+import CollectCreate from './pages/commerce/collect/CollectCreateElite';
+import CollectDetail from './pages/commerce/collect/CollectDetailElite';
+import CollectEdit from './pages/commerce/collect/CollectEditNew';
+// Procure Module - Elite Design
+import ProcureList from './pages/commerce/procure/ProcureListElite';
+import ProcureCreate from './pages/commerce/procure/ProcureCreateElite';
+import ProcureDetail from './pages/commerce/procure/ProcureDetailElite';
+import ProcureEdit from './pages/commerce/procure/ProcureEditNew';
+// Pay Module - Elite Design
+import PayList from './pages/commerce/pay/PayListElite';
+import PayCreate from './pages/commerce/pay/PayCreateElite';
+import PayDetail from './pages/commerce/pay/PayDetailElite';
+import PayEdit from './pages/commerce/pay/PayEditNew';
+// Spend Module - Elite Design
+import SpendList from './pages/commerce/spend/SpendListElite';
+import SpendCreate from './pages/commerce/spend/SpendCreateElite';
+import SpendDetail from './pages/commerce/spend/SpendDetailElite';
+import SpendEdit from './pages/commerce/spend/SpendEditNew';
+// Tax Module - Elite Design
+import TaxList from './pages/commerce/tax/TaxListElite';
+import TaxCreate from './pages/commerce/tax/TaxCreateElite';
+import TaxDetail from './pages/commerce/tax/TaxDetailElite';
+import TaxEdit from './pages/commerce/tax/TaxEditNew';
+// Reconcile Module - Elite Design
+import ReconcileList from './pages/commerce/reconcile/ReconcileListElite';
+import ReconcileCreate from './pages/commerce/reconcile/ReconcileCreateElite';
+import ReconcileDetail from './pages/commerce/reconcile/ReconcileDetailElite';
+import ReconcileEdit from './pages/commerce/reconcile/ReconcileEditNew';
+// Govern Module - Elite Design
+import GovernList from './pages/commerce/govern/GovernListElite';
+import GovernCreate from './pages/commerce/govern/GovernCreateElite';
+import GovernDetail from './pages/commerce/govern/GovernDetailElite';
+import GovernEdit from './pages/commerce/govern/GovernEditNew';
+
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // null = checking auth status
+  const [authLoading, setAuthLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    // Check authentication status on mount
+    const checkAuth = () => {
+      const authStatus = authService.isAuthenticated();
+      console.log('Auth check on mount:', authStatus);
+      setIsAuthenticated(authStatus);
+      
+      // Get user data
+      if (authStatus) {
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        setCurrentUser(userData);
+      }
+      
+      setAuthLoading(false);
+    };
+    checkAuth();
+    
+    // Also listen for storage changes (e.g., when user logs in/out in another tab)
+    const handleStorageChange = () => {
+      const authStatus = authService.isAuthenticated();
+      console.log('Auth changed via storage:', authStatus);
+      setIsAuthenticated(authStatus);
+      
+      if (authStatus) {
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        setCurrentUser(userData);
+      } else {
+        setCurrentUser(null);
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const PrivateRoute = ({ children }) => {
+    // Double-check auth from localStorage directly
+    const currentAuth = authService.isAuthenticated();
+    
+    // Show loading while checking auth
+    if (authLoading) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
+          </div>
+        </div>
+      );
+    }
+    
+    // Use current auth check from localStorage (most up-to-date)
+    if (!currentAuth) {
+      console.log('Not authenticated, redirecting to landing');
+      return <Navigate to="/" replace />;
+    }
+    
+    return children;
+  };
+
+  return (
+    <div className="App">
+      <WebRTCProvider userId={currentUser?.id}>
+        <BrowserRouter>
+          <Routes>
+          {/* Public Website Routes */}
+          <Route path="/" element={<Home />} />
+          
+          {/* Auth Routes - New Login/Signup System */}
+          <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/signup" element={<SignupPage />} />
+          
+          {/* Redirect old login routes to new auth pages */}
+          <Route path="/login" element={<Navigate to="/auth/login" replace />} />
+          <Route path="/commerce/login" element={<Navigate to="/auth/login" replace />} />
+          <Route path="/commerce-login" element={<Navigate to="/auth/login" replace />} />
+          
+          <Route path="/solutions" element={<SolutionsIndex />} />
+          <Route path="/solutions/commerce" element={<CommerceSolution />} />
+          <Route path="/solutions/workforce" element={<WorkforceSolution />} />
+          <Route path="/solutions/capital" element={<CapitalSolution />} />
+          <Route path="/solutions/operations" element={<OperationsSolution />} />
+          <Route path="/solutions/finance" element={<FinanceSolution />} />
+          <Route path="/insights" element={<InsightsIndex />} />
+          <Route path="/intelligence" element={<IntelligencePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          
+          {/* Workspace Routes - Premium UI */}
+          <Route
+            path="/workspace"
+            element={
+              <PrivateRoute>
+                <WorkspaceLayoutNew setIsAuthenticated={setIsAuthenticated} />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<WorkspaceDashboard />} />
+            <Route path="chat" element={<IBChatPremium viewMode="chat" />} />
+            <Route path="channels" element={<IBChatPremium viewMode="channels" />} />
+            <Route path="settings" element={<WorkspaceSettings />} />
+          </Route>
+
+          {/* Reports Routes */}
+          <Route
+            path="/reports"
+            element={
+              <PrivateRoute>
+                <WorkspaceLayoutNew setIsAuthenticated={setIsAuthenticated} />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<ReportsDashboard />} />
+          </Route>
+          
+          {/* IB Commerce Routes - Now within Workspace Layout */}
+          <Route
+            path="/commerce"
+            element={
+              <PrivateRoute>
+                <WorkspaceLayoutNew setIsAuthenticated={setIsAuthenticated} />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<CommerceDashboard />} />
+            <Route path="profile" element={<CommerceProfile />} />
+            <Route path="settings" element={<CommerceProfile />} />
+            <Route path="lead" element={<LeadList />} />
+            <Route path="lead/create" element={<LeadCreate />} />
+            <Route path="lead/:leadId" element={<LeadDetail />} />
+            <Route path="lead/:leadId/edit" element={<LeadEdit />} />
+            <Route path="masters" element={<MasterDataView />} />
+            <Route path="evaluate" element={<EvaluateList />} />
+            <Route path="evaluate/create" element={<EvaluateCreate />} />
+            <Route path="evaluate/:evaluationId" element={<EvaluateDetail />} />
+            <Route path="evaluate/:evaluationId/edit" element={<EvaluateEdit />} />
+            <Route path="commit" element={<CommitList />} />
+            <Route path="commit/create" element={<CommitCreate />} />
+            <Route path="commit/:commitId" element={<CommitDetail />} />
+            <Route path="commit/:commitId/edit" element={<CommitEdit />} />
+            <Route path="execute" element={<ExecuteList />} />
+            <Route path="execute/create" element={<ExecuteCreate />} />
+            <Route path="execute/:executionId" element={<ExecuteDetail />} />
+            <Route path="execute/:executionId/edit" element={<ExecuteEdit />} />
+            <Route path="bill" element={<CommerceBillList />} />
+            <Route path="bill/create" element={<CommerceBillCreate />} />
+            <Route path="bill/:invoiceId" element={<CommerceBillDetail />} />
+            <Route path="bill/:invoiceId/edit" element={<CommerceBillEdit />} />
+            <Route path="collect" element={<CollectList />} />
+            <Route path="collect/create" element={<CollectCreate />} />
+            <Route path="collect/:collectionId" element={<CollectDetail />} />
+            <Route path="collect/:collectionId/edit" element={<CollectEdit />} />
+            <Route path="procure" element={<ProcureList />} />
+            <Route path="procure/create" element={<ProcureCreate />} />
+            <Route path="procure/:procurementId" element={<ProcureDetail />} />
+            <Route path="procure/:procurementId/edit" element={<ProcureEdit />} />
+            <Route path="pay" element={<PayList />} />
+            <Route path="pay/create" element={<PayCreate />} />
+            <Route path="pay/:paymentId" element={<PayDetail />} />
+            <Route path="pay/:paymentId/edit" element={<PayEdit />} />
+            <Route path="spend" element={<SpendList />} />
+            <Route path="spend/create" element={<SpendCreate />} />
+            <Route path="spend/:spendId" element={<SpendDetail />} />
+            <Route path="spend/:spendId/edit" element={<SpendEdit />} />
+            <Route path="tax" element={<TaxList />} />
+            <Route path="tax/create" element={<TaxCreate />} />
+            <Route path="tax/:taxId" element={<TaxDetail />} />
+            <Route path="tax/:taxId/edit" element={<TaxEdit />} />
+            <Route path="reconcile" element={<ReconcileList />} />
+            <Route path="reconcile/create" element={<ReconcileCreate />} />
+            <Route path="reconcile/:reconciliationId" element={<ReconcileDetail />} />
+            <Route path="reconcile/:reconciliationId/edit" element={<ReconcileEdit />} />
+            <Route path="govern" element={<GovernList />} />
+            <Route path="govern/create" element={<GovernCreate />} />
+            <Route path="govern/:governanceId" element={<GovernDetail />} />
+            <Route path="govern/:governanceId/edit" element={<GovernEdit />} />
+            {/* Manufacturing Masters */}
+            <Route path="manufacturing/masters" element={<MasterDashboard />} />
+            <Route path="manufacturing/masters/:masterType" element={<MasterList />} />
+            <Route path="manufacturing/masters-view" element={<MasterDataView />} />
+            {/* Manufacturing Analytics */}
+            <Route path="manufacturing/analytics" element={<AnalyticsDashboard />} />
+          </Route>
+
+          {/* IB Finance Routes - Within Workspace Layout */}
+          <Route
+            path="/finance"
+            element={
+              <PrivateRoute>
+                <WorkspaceLayoutNew setIsAuthenticated={setIsAuthenticated} />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<FinanceDashboard />} />
+            {/* Cash Flow Routes */}
+            <Route path="cashflow/actuals" element={<CashFlowActuals />} />
+            <Route path="cashflow/budgeting" element={<CashFlowBudgeting />} />
+            <Route path="cashflow/forecasting" element={<CashFlowForecasting />} />
+            <Route path="cashflow/variance" element={<CashFlowVariance />} />
+            {/* Financial Reporting Routes */}
+            <Route path="financial-reporting" element={<FinancialReporting />} />
+            <Route path="financial-reporting/profit-loss" element={<ProfitLoss />} />
+            <Route path="financial-reporting/balance-sheet" element={<BalanceSheet />} />
+            <Route path="financial-reporting/cashflow" element={<CashFlowStatementReport />} />
+            <Route path="financial-reporting/trial-balance" element={<TrialBalance />} />
+            <Route path="financial-reporting/general-ledger" element={<GeneralLedger />} />
+            {/* Accounting Routes */}
+            <Route path="invoices" element={<Invoices />} />
+            <Route path="invoices/create" element={<CreateInvoice />} />
+            <Route path="invoices/:id" element={<InvoiceDetail />} />
+            <Route path="bills" element={<Bills />} />
+            <Route path="bills/create" element={<CreateBill />} />
+            <Route path="bills/:id" element={<BillDetail />} />
+            <Route path="collections" element={<Collections />} />
+            <Route path="payments" element={<Payments />} />
+            <Route path="customers" element={<Customers />} />
+            <Route path="customers/add" element={<AddCustomerPage />} />
+            <Route path="customers/:id" element={<CustomerDetail />} />
+            <Route path="customers/:id/edit" element={<EditCustomerPage />} />
+            <Route path="vendors" element={<Vendors />} />
+            <Route path="vendors/add" element={<AddVendorPage />} />
+            <Route path="vendors/:id" element={<VendorDetail />} />
+            <Route path="vendors/:id/edit" element={<EditVendorPage />} />
+            <Route path="banking/accounts" element={<BankingAccounts />} />
+            <Route path="banking/transactions" element={<BankingTransactions />} />
+            <Route path="banking/matching" element={<BankingMatching />} />
+            <Route path="banking/manage" element={<ManageBanks />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+          
+          {/* Redirect old routes to new workspace routes */}
+          <Route path="/dashboard" element={<Navigate to="/workspace" replace />} />
+          <Route path="/cashflow/*" element={<Navigate to="/finance" replace />} />
+          <Route path="/customers" element={<Navigate to="/finance/customers" replace />} />
+          <Route path="/vendors" element={<Navigate to="/finance/vendors" replace />} />
+          <Route path="/invoices" element={<Navigate to="/finance/invoices" replace />} />
+          <Route path="/bills" element={<Navigate to="/finance/bills" replace />} />
+          <Route path="/financial-reporting/*" element={<Navigate to="/finance" replace />} />
+          <Route
+            path="/cashflow/budgeting"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CashFlowBudgeting />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/cashflow/forecasting"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CashFlowForecasting />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/cashflow/variance"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CashFlowVariance />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/customers"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Customers />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/customers/add"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <AddCustomerPage />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/customers/:id/edit"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <EditCustomerPage />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/customers/:id"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CustomerDetail />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/invoices"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Invoices />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/invoices/create"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CreateInvoice />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/invoices/:id"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <InvoiceDetail />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/invoices/:id/edit"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CreateInvoice />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/vendors"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Vendors />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/vendors/add"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <AddVendorPage />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/vendors/:id/edit"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <EditVendorPage />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/vendors/:id"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <VendorDetail />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/bills"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Bills />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/bills/create"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CreateBill />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/bills/:id"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <BillDetail />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/bills/:id/edit"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CreateBill />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/aging-dso"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <AgingDSO />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/collections"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Collections />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/aging-dpo"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <AgingDPO />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/payments"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Payments />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/banking"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <BankingAccounts />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/banking/accounts"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <BankingAccounts />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/banking/transactions"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <BankingTransactions />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/banking/matching"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <BankingMatching />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/banking/manage"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <ManageBanks />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/adjustment-entries"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <AdjustmentEntries />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/adjustment-entries/create"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CreateAdjustmentEntry />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/adjustment-entries/edit/:id"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CreateAdjustmentEntry />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/adjustment-entries/:id"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <AdjustmentEntryDetail />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/banking/:id"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <BankingTransactions />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/banking/transaction/:transactionId"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <BankingMatching />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Reports />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/financial-reporting"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <FinancialReporting />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/financial-reporting/profit-loss"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <ProfitLoss />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/financial-reporting/balance-sheet"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <BalanceSheet />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/financial-reporting/cashflow"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CashFlowStatementReport />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/financial-reporting/trial-balance"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <TrialBalance />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/financial-reporting/general-ledger"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <GeneralLedger />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Settings />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+      <Toaster position="top-right" richColors />
+      </WebRTCProvider>
+    </div>
+  );
+}
+
+export default App;

@@ -1,0 +1,504 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import {
+  ArrowLeft, Building2, MapPin, Globe, Phone, Mail, Calendar, Users,
+  TrendingUp, Award, Target, Briefcase, ExternalLink, CheckCircle,
+  Edit, Share2, FileText, DollarSign, Shield, Star, Linkedin, Twitter,
+  Facebook, Instagram, Package, Map as MapIcon
+} from 'lucide-react';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+const LeadDetailEnriched = () => {
+  const { leadId } = useParams();
+  const navigate = useNavigate();
+  const [lead, setLead] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+
+  console.log('🎯 LeadDetailEnriched component loaded for leadId:', leadId);
+
+  useEffect(() => {
+    console.log('🔄 Fetching lead details for:', leadId);
+    fetchLeadDetails();
+  }, [leadId]);
+
+  const fetchLeadDetails = async () => {
+    try {
+      // Use /raw endpoint to get ALL fields including enriched data
+      const response = await axios.get(`${BACKEND_URL}/api/commerce/leads/${leadId}/raw`);
+      console.log('🔍 Lead data received:', response.data);
+      console.log('📊 Lead Score:', response.data.lead_score);
+      console.log('📊 Fit Score:', response.data.fit_score);
+      console.log('📊 Intent Score:', response.data.intent_score);
+      console.log('📊 Potential Score:', response.data.potential_score);
+      console.log('🏷️ Category:', response.data.lead_score_category);
+      setLead(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching lead:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleEditLead = () => {
+    console.log('✏️ Edit button clicked, navigating to:', `/commerce/lead/edit/${leadId}`);
+    // Navigate to edit page
+    navigate(`/commerce/lead/edit/${leadId}`);
+  };
+
+  const handleShareLead = () => {
+    console.log('📤 Share button clicked, opening dialog');
+    setShowShareDialog(true);
+  };
+
+  const copyShareLink = () => {
+    const shareUrl = `${window.location.origin}/commerce/lead/${leadId}`;
+    console.log('📋 Copying link:', shareUrl);
+    navigator.clipboard.writeText(shareUrl);
+    alert('Share link copied to clipboard!');
+    setShowShareDialog(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-cyan-50/50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-cyan-600 border-r-transparent"></div>
+          <p className="mt-4 text-cyan-900 font-semibold text-lg">Loading lead details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!lead) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-cyan-50/50 p-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-3xl font-bold text-slate-900 mb-4">Lead Not Found</h1>
+          <button onClick={() => navigate('/commerce/lead')} className="px-6 py-3 bg-cyan-600 text-white rounded-xl">
+            Back to Leads
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-cyan-50/50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <button
+            onClick={() => navigate('/commerce/lead')}
+            className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-semibold transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            Back to Leads
+          </button>
+          <div className="flex gap-3">
+            <button 
+              onClick={handleEditLead}
+              className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-cyan-300 text-cyan-700 font-semibold rounded-xl hover:bg-cyan-50 transition-all"
+            >
+              <Edit className="h-5 w-5" />
+              Edit Lead
+            </button>
+            <button 
+              onClick={handleShareLead}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white font-bold rounded-xl hover:shadow-xl transition-all"
+            >
+              <Share2 className="h-5 w-5" />
+              Share
+            </button>
+          </div>
+        </div>
+
+        {/* Company Header Card */}
+        <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 rounded-3xl p-8 mb-6 shadow-2xl">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-4 bg-white/20 rounded-2xl">
+                  <Building2 className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold text-white mb-2">{lead.company_name}</h1>
+                  <p className="text-cyan-100 text-lg font-medium">{lead.industry_type}</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3 mt-4">
+                <span className="px-4 py-2 bg-white/20 rounded-full text-white font-semibold text-sm">
+                  {lead.lead_status || 'New'}
+                </span>
+                <span className="px-4 py-2 bg-white/20 rounded-full text-white font-semibold text-sm">
+                  Score: {lead.lead_score ? `${lead.lead_score}/100` : 'Pending'}
+                </span>
+                {lead.lead_score_category && (
+                  <span className={`px-4 py-2 rounded-full font-bold text-sm ${
+                    lead.lead_score_category === 'Hot' ? 'bg-red-500 text-white' :
+                    lead.lead_score_category === 'Warm' ? 'bg-amber-500 text-white' :
+                    'bg-blue-500 text-white'
+                  }`}>
+                    {lead.lead_score_category} Lead
+                  </span>
+                )}
+                {lead.assigned_to && (
+                  <span className="px-4 py-2 bg-white/20 rounded-full text-white font-semibold text-sm">
+                    Assigned to: {lead.assigned_to}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Lead Scoring Breakdown */}
+        {lead.lead_score > 0 && (
+          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 mb-6 shadow-xl border-2 border-slate-200">
+            <div className="flex items-center gap-3 mb-6">
+              <Star className="h-6 w-6 text-cyan-600" />
+              <h2 className="text-2xl font-bold text-slate-900">Lead Score Breakdown</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Total Score */}
+              <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-xl p-4 border-2 border-cyan-300">
+                <p className="text-sm font-bold text-cyan-700 mb-1">Total Score</p>
+                <p className="text-4xl font-black text-cyan-900">{lead.lead_score}</p>
+                <p className="text-xs text-cyan-600 mt-1">out of 100</p>
+              </div>
+              
+              {/* Fit Score */}
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-4 border-2 border-emerald-300">
+                <p className="text-sm font-bold text-emerald-700 mb-1">Fit Score</p>
+                <p className="text-4xl font-black text-emerald-900">{lead.fit_score || 0}</p>
+                <p className="text-xs text-emerald-600 mt-1">ICP Match (40%)</p>
+              </div>
+              
+              {/* Intent Score */}
+              <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 border-2 border-amber-300">
+                <p className="text-sm font-bold text-amber-700 mb-1">Intent Score</p>
+                <p className="text-4xl font-black text-amber-900">{lead.intent_score || 0}</p>
+                <p className="text-xs text-amber-600 mt-1">Buying Signals (30%)</p>
+              </div>
+              
+              {/* Potential Score */}
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 border-2 border-purple-300">
+                <p className="text-sm font-bold text-purple-700 mb-1">Potential Score</p>
+                <p className="text-4xl font-black text-purple-900">{lead.potential_score || 0}</p>
+                <p className="text-xs text-purple-600 mt-1">Revenue Potential (30%)</p>
+              </div>
+            </div>
+            
+            {lead.scoring_reasoning && (
+              <div className="mt-4 p-4 bg-slate-50 rounded-xl border-l-4 border-cyan-600">
+                <p className="text-sm font-bold text-slate-700 mb-2">Scoring Reasoning:</p>
+                <p className="text-slate-600 leading-relaxed">{lead.scoring_reasoning}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Main Details */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Basic Information */}
+            <Section title="🏢 Basic Information" icon={Building2}>
+              <InfoGrid>
+                <InfoItem label="Company Name" value={lead.company_name} />
+                <InfoItem label="Legal Entity Name" value={lead.legal_entity_name} />
+                <InfoItem label="Industry" value={lead.industry_type} />
+                <InfoItem label="Year Established" value={lead.year_established} />
+                <InfoItem label="Company Size" value={lead.company_size} />
+                <InfoItem label="Employees Count" value={lead.employees_count} />
+                <InfoItem label="Annual Turnover" value={lead.annual_turnover ? `$${(lead.annual_turnover / 1000000).toFixed(2)}M` : null} />
+                <InfoItem label="Business Model" value={lead.business_model} />
+              </InfoGrid>
+              {lead.company_description && (
+                <div className="mt-4 p-4 bg-cyan-50 rounded-xl">
+                  <p className="text-slate-700 leading-relaxed">{lead.company_description}</p>
+                </div>
+              )}
+            </Section>
+
+            {/* Registration & Compliance */}
+            <Section title="📋 Registration & Compliance" icon={Shield}>
+              <InfoGrid>
+                <InfoItem label="GSTIN" value={lead.gstin} />
+                <InfoItem label="PAN" value={lead.pan} />
+                <InfoItem label="CIN" value={lead.cin} />
+                <InfoItem label="Registered Name" value={lead.registered_name} />
+                <InfoItem label="Verification Status" value={lead.verification_status} badge />
+              </InfoGrid>
+            </Section>
+
+            {/* Location Details */}
+            <Section title="📍 Location Details" icon={MapPin}>
+              <InfoGrid>
+                <InfoItem label="Headquarters" value={lead.headquarters} fullWidth />
+                <InfoItem label="City" value={lead.city} />
+                <InfoItem label="State" value={lead.state} />
+                <InfoItem label="Country" value={lead.country} />
+                <InfoItem label="Pincode" value={lead.pincode} />
+                <InfoItem label="Office Count" value={lead.office_count} />
+              </InfoGrid>
+              {lead.branch_locations && lead.branch_locations.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-bold text-slate-700 mb-2">Branch Locations:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {lead.branch_locations.map((branch, idx) => (
+                      <span key={idx} className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-semibold">
+                        {branch}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </Section>
+
+            {/* Products & Services */}
+            <Section title="📦 Products & Services" icon={Package}>
+              {lead.main_products_services && lead.main_products_services.length > 0 ? (
+                <div className="grid grid-cols-1 gap-3">
+                  {lead.main_products_services.map((item, idx) => (
+                    <div key={idx} className="p-3 bg-cyan-50 rounded-xl border-l-4 border-cyan-600">
+                      <p className="font-semibold text-slate-900">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-slate-500 italic">No products/services data available</p>
+              )}
+            </Section>
+
+            {/* Financial Profile */}
+            <Section title="💰 Financial & Organizational Profile" icon={DollarSign}>
+              <InfoGrid>
+                <InfoItem label="Estimated Revenue" value={lead.estimated_revenue ? `$${(lead.estimated_revenue / 1000000).toFixed(2)}M` : null} />
+                <InfoItem label="Funding Stage" value={lead.funding_stage} />
+                <InfoItem label="Ownership Type" value={lead.ownership_type} />
+              </InfoGrid>
+              {lead.investors && lead.investors.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-bold text-slate-700 mb-2">Investors:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {lead.investors.map((investor, idx) => (
+                      <span key={idx} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                        {investor}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </Section>
+
+            {/* Technology Stack */}
+            {lead.technology_stack && lead.technology_stack.length > 0 && (
+              <Section title="💻 Technology Stack" icon={Target}>
+                <div className="flex flex-wrap gap-2">
+                  {lead.technology_stack.map((tech, idx) => (
+                    <span key={idx} className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg font-semibold">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </Section>
+            )}
+          </div>
+
+          {/* Right Column - Contact & Quick Info */}
+          <div className="space-y-6">
+            {/* Contact Person */}
+            <Section title="👤 Contact Person" icon={Users}>
+              <div className="space-y-3">
+                <InfoItem label="Name" value={lead.contact_name} fullWidth />
+                <InfoItem label="Email" value={lead.email_address} fullWidth icon={Mail} />
+                <InfoItem label="Phone" value={lead.contact_phone || lead.phone_number} fullWidth icon={Phone} />
+                <InfoItem label="Designation" value={lead.contact_designation} fullWidth />
+                <InfoItem label="Department" value={lead.contact_department} fullWidth />
+                <InfoItem label="Seniority Level" value={lead.seniority_level} fullWidth badge />
+                {lead.decision_maker_flag && (
+                  <div className="p-3 bg-emerald-100 border-2 border-emerald-400 rounded-xl flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600" />
+                    <span className="font-bold text-emerald-700">Decision Maker</span>
+                  </div>
+                )}
+              </div>
+            </Section>
+
+            {/* Online Presence */}
+            <Section title="🌐 Online Presence" icon={Globe}>
+              <div className="space-y-3">
+                {lead.official_website && (
+                  <SocialLink icon={Globe} label="Website" url={lead.official_website} />
+                )}
+                {lead.linkedin_page && (
+                  <SocialLink icon={Linkedin} label="LinkedIn" url={lead.linkedin_page} />
+                )}
+                {lead.twitter_url && (
+                  <SocialLink icon={Twitter} label="Twitter" url={lead.twitter_url} />
+                )}
+                {lead.facebook_url && (
+                  <SocialLink icon={Facebook} label="Facebook" url={lead.facebook_url} />
+                )}
+                {lead.instagram_url && (
+                  <SocialLink icon={Instagram} label="Instagram" url={lead.instagram_url} />
+                )}
+              </div>
+              {lead.domain_emails && lead.domain_emails.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-bold text-slate-700 mb-2">Domain Emails:</p>
+                  {lead.domain_emails.map((email, idx) => (
+                    <a key={idx} href={`mailto:${email}`} className="block text-cyan-600 hover:underline text-sm mb-1">
+                      {email}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </Section>
+
+            {/* Key Markets */}
+            {lead.key_markets && lead.key_markets.length > 0 && (
+              <Section title="🎯 Key Markets" icon={Target}>
+                <div className="space-y-2">
+                  {lead.key_markets.map((market, idx) => (
+                    <div key={idx} className="p-2 bg-blue-50 rounded-lg">
+                      <p className="text-slate-900 font-semibold text-sm">{market}</p>
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
+
+            {/* Certifications */}
+            {lead.certifications && lead.certifications.length > 0 && (
+              <Section title="🏅 Certifications" icon={Award}>
+                <div className="space-y-2">
+                  {lead.certifications.map((cert, idx) => (
+                    <div key={idx} className="flex items-center gap-2 p-2 bg-amber-50 rounded-lg">
+                      <Award className="h-4 w-4 text-amber-600" />
+                      <span className="text-slate-900 font-semibold text-sm">{cert}</span>
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
+
+            {/* Enrichment Info */}
+            <Section title="✨ Enrichment Info" icon={Star}>
+              <div className="space-y-2 text-sm">
+                <InfoItem label="Confidence" value={lead.enrichment_confidence} badge />
+                <InfoItem label="Last Updated" value={lead.enrichment_timestamp ? new Date(lead.enrichment_timestamp).toLocaleDateString() : null} />
+                <InfoItem label="Source" value={lead.contact_source} />
+              </div>
+            </Section>
+          </div>
+        </div>
+
+        {/* Share Dialog */}
+        {showShareDialog && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-cyan-100 rounded-xl">
+                  <Share2 className="h-6 w-6 text-cyan-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900">Share Lead</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold text-slate-600 mb-2">Company</p>
+                  <p className="text-lg font-bold text-slate-900">{lead.company_name}</p>
+                </div>
+                
+                <div>
+                  <p className="text-sm font-semibold text-slate-600 mb-2">Share Link</p>
+                  <div className="p-3 bg-slate-100 rounded-lg break-all text-sm text-slate-700">
+                    {window.location.origin}/commerce/lead/{leadId}
+                  </div>
+                </div>
+                
+                <div className="flex gap-3 mt-6">
+                  <button
+                    onClick={copyShareLink}
+                    className="flex-1 px-4 py-3 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white font-bold rounded-xl hover:shadow-xl transition-all"
+                  >
+                    Copy Link
+                  </button>
+                  <button
+                    onClick={() => setShowShareDialog(false)}
+                    className="px-4 py-3 bg-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-300 transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Reusable Components
+const Section = ({ title, icon: Icon, children }) => (
+  <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border-2 border-slate-200">
+    <div className="flex items-center gap-3 mb-4">
+      {Icon && <Icon className="h-6 w-6 text-cyan-600" />}
+      <h2 className="text-xl font-bold text-slate-900">{title}</h2>
+    </div>
+    {children}
+  </div>
+);
+
+const InfoGrid = ({ children }) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {children}
+  </div>
+);
+
+const InfoItem = ({ label, value, icon: Icon, badge, fullWidth }) => {
+  if (!value) return null;
+  
+  return (
+    <div className={fullWidth ? 'md:col-span-2' : ''}>
+      <p className="text-xs font-bold text-slate-600 mb-1 flex items-center gap-1">
+        {Icon && <Icon className="h-4 w-4" />}
+        {label}
+      </p>
+      {badge ? (
+        <span className={`inline-block px-3 py-1 rounded-full text-sm font-bold ${
+          value.toLowerCase() === 'verified' || value.toLowerCase() === 'executive' ? 'bg-emerald-100 text-emerald-700' :
+          value.toLowerCase() === 'partial' || value.toLowerCase() === 'manager' ? 'bg-amber-100 text-amber-700' :
+          'bg-slate-100 text-slate-700'
+        }`}>
+          {value}
+        </span>
+      ) : (
+        <p className="text-slate-900 font-semibold">{value}</p>
+      )}
+    </div>
+  );
+};
+
+const SocialLink = ({ icon: Icon, label, url }) => (
+  <a
+    href={url.startsWith('http') ? url : `https://${url}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors group"
+  >
+    <div className="flex items-center gap-3">
+      <Icon className="h-5 w-5 text-cyan-600" />
+      <span className="font-semibold text-slate-900">{label}</span>
+    </div>
+    <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-cyan-600" />
+  </a>
+);
+
+export default LeadDetailEnriched;

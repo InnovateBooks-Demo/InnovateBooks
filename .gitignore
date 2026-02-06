@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+venv/
+.env.*
+
+# Node / React
+node_modules/
+dist/
+build/
+.vite/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Test artifacts
+test_output*.log
+full_test_results.log
+
+# Temporary / cache
+.emergent/
+memory/
+
+# Secrets
+*.pem
+*.key
+
+
+
+# Local notes / scratch
+*.txt
+gitconfig.txt
+gitignore.txt

@@ -1,0 +1,236 @@
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  Settings,
+  Building2,
+  Boxes,
+  Cog,
+  FileCheck,
+  Activity,
+  ArrowLeft,
+  Menu,
+  X,
+  ChevronRight,
+  Home,
+} from "lucide-react";
+import SharedNavigation from "../components/SharedNavigation";
+
+const IBOperationsHub = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const modules = [
+    {
+      id: "overview",
+      name: "Overview",
+      icon: Home,
+      path: "/solutions/operations/overview",
+      description: "Introduction to IB Operations",
+    },
+    {
+      id: "projects",
+      name: "Projects",
+      icon: Building2,
+      path: "/solutions/operations/projects",
+      description: "Project P&L Intelligence",
+      badge: "CORE",
+    },
+    {
+      id: "assets",
+      name: "Assets",
+      icon: Cog,
+      path: "/solutions/operations/assets",
+      description: "Fixed Asset Management",
+    },
+    {
+      id: "inventory",
+      name: "Inventory",
+      icon: Boxes,
+      path: "/solutions/operations/inventory",
+      description: "Stock-to-Finance Sync",
+    },
+    {
+      id: "procurement",
+      name: "Procurement",
+      icon: FileCheck,
+      path: "/solutions/operations/procurement",
+      description: "Purchase Intelligence",
+    },
+    {
+      id: "production",
+      name: "Production",
+      icon: Activity,
+      path: "/solutions/operations/production",
+      description: "Manufacturing Costs",
+    },
+  ];
+
+  const getActiveModule = () => {
+    const path = location.pathname;
+    for (const module of modules) {
+      if (path.includes(module.id)) return module.id;
+    }
+    return "overview";
+  };
+
+  const [expandedModule, setExpandedModule] = useState(getActiveModule());
+
+  useEffect(() => {
+    setExpandedModule(getActiveModule());
+  }, [location.pathname]);
+
+  const isModuleActive = (moduleId) => location.pathname.includes(moduleId);
+
+  const getBreadcrumbs = () => {
+    const path = location.pathname;
+    const breadcrumbs = [
+      { name: "Solutions", path: "/solutions" },
+      { name: "Operations", path: "/solutions/operations" },
+    ];
+
+    const currentModule = modules.find(
+      (m) => path.includes(m.id) && m.id !== "overview",
+    );
+    if (currentModule) {
+      breadcrumbs.push({ name: currentModule.name, path: currentModule.path });
+    } else if (path.includes("/overview")) {
+      breadcrumbs.push({
+        name: "Overview",
+        path: "/solutions/operations/overview",
+      });
+    }
+
+    return breadcrumbs;
+  };
+
+  const breadcrumbs = getBreadcrumbs();
+
+  return (
+    <div className="min-h-screen bg-white">
+      <SharedNavigation />
+
+      <div className="pt-20 flex">
+        <aside
+          className={`${sidebarOpen ? "w-80" : "w-0"} transition-all duration-300 bg-white border-r border-slate-200 fixed left-0 top-20 bottom-0 overflow-y-auto z-40`}
+        >
+          <div className="p-6">
+            <Link
+              to="/solutions"
+              className="flex items-center gap-2 text-[#3A4E63] hover:text-[#3A4E63] font-semibold mb-6 transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              All Solutions
+            </Link>
+
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                IB Operations
+              </h2>
+              <p className="text-sm text-slate-600">
+                Operational Intelligence Platform
+              </p>
+            </div>
+
+            <nav className="space-y-2">
+              {modules.map((module) => {
+                const Icon = module.icon;
+                const isCurrentModule = isModuleActive(module.id);
+
+                return (
+                  <div key={module.id}>
+                    <button
+                      onClick={() => {
+                        setExpandedModule(module.id);
+                        navigate(module.path);
+                      }}
+                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
+                        isCurrentModule
+                          ? "bg-gradient-to-r from-[#3A4E63] to-[#3A4E63] text-white shadow-lg"
+                          : "hover:bg-slate-50 text-slate-700"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon className="h-5 w-5" />
+                        <div className="text-left">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold">{module.name}</span>
+                            {module.badge && (
+                              <span className="px-2 py-0.5 bg-green-500 text-white text-xs rounded-full">
+                                {module.badge}
+                              </span>
+                            )}
+                          </div>
+                          <p
+                            className={`text-xs ${isCurrentModule ? "text-white/80" : "text-slate-500"}`}
+                          >
+                            {module.description}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                );
+              })}
+            </nav>
+
+            <div className="mt-8 p-4 bg-gradient-to-br from-[#3A4E63] to-[#3A4E63] rounded-2xl text-white">
+              <h3 className="font-bold mb-2">Ready to Get Started?</h3>
+              <p className="text-sm mb-4 opacity-90">
+                Transform your operations management
+              </p>
+              <Link
+                to="/auth/signup"
+                className="block w-full text-center bg-white text-[#3A4E63] font-bold py-2 rounded-lg hover:shadow-lg transition-all"
+              >
+                Start Free Trial
+              </Link>
+            </div>
+          </div>
+        </aside>
+
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="fixed left-4 top-24 z-50 lg:hidden bg-white p-2 rounded-lg shadow-lg border border-slate-200"
+        >
+          {sidebarOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
+        </button>
+
+        <main
+          className={`flex-1 ${sidebarOpen ? "ml-80" : "ml-0"} transition-all duration-300 p-8`}
+        >
+          <nav className="mb-6" aria-label="Breadcrumb">
+            <ol className="flex items-center gap-2 text-sm">
+              {breadcrumbs.map((crumb, index) => (
+                <li key={crumb.path} className="flex items-center gap-2">
+                  {index > 0 && (
+                    <ChevronRight className="h-4 w-4 text-slate-400" />
+                  )}
+                  {index === breadcrumbs.length - 1 ? (
+                    <span className="font-semibold text-[#3A4E63]">
+                      {crumb.name}
+                    </span>
+                  ) : (
+                    <Link
+                      to={crumb.path}
+                      className="text-slate-600 hover:text-[#3A4E63] transition-colors"
+                    >
+                      {crumb.name}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default IBOperationsHub;

@@ -1,0 +1,228 @@
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { ShoppingCart, Save, ArrowLeft } from "lucide-react";
+
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
+const ProcurementEdit = () => {
+  const { pr_id } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    pr_number: "",
+    title: "",
+    description: "",
+    requester: "",
+    department: "",
+    priority: "medium",
+    estimated_value: 0,
+    required_by: "",
+    status: "draft",
+  });
+
+  useEffect(() => {
+    fetchPR();
+  }, [pr_id]);
+
+  const fetchPR = async () => {
+    const token = localStorage.getItem("access_token");
+    const res = await fetch(
+      `${API_URL}/api/commerce/modules/procurement/requests/${pr_id}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    const data = await res.json();
+    if (data.success)
+      setFormData({
+        pr_number: data.request.pr_number || "",
+        title: data.request.title || "",
+        description: data.request.description || "",
+        requester: data.request.requester || "",
+        department: data.request.department || "",
+        priority: data.request.priority || "medium",
+        estimated_value: data.request.estimated_value || 0,
+        required_by: data.request.required_by || "",
+        status: data.request.status || "draft",
+      });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "estimated_value" ? parseFloat(value) || 0 : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const token = localStorage.getItem("access_token");
+    const res = await fetch(
+      `${API_URL}/api/commerce/modules/procurement/requests/${pr_id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      },
+    );
+    if ((await res.json()).success) navigate(`/commerce/procure/${pr_id}`);
+    setLoading(false);
+  };
+
+  return (
+    <div className="p-6 max-w-4xl mx-auto" data-testid="procurement-edit">
+      <div className="mb-6">
+        <Link
+          to={`/commerce/procure/${pr_id}`}
+          className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-4"
+        >
+          <ArrowLeft className="w-4 h-4" /> Back
+        </Link>
+        <h1 className="text-2xl font-bold">Edit Purchase Request</h1>
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-white rounded-xl border p-6">
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <ShoppingCart className="w-5 h-5 text-[#3A4E63]" /> Request
+            Information
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                PR Number *
+              </label>
+              <input
+                type="text"
+                name="pr_number"
+                value={formData.pr_number}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2.5 border rounded-xl"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Title *</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2.5 border rounded-xl"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">
+                Description
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                rows={2}
+                className="w-full px-4 py-2.5 border rounded-xl"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Requester
+              </label>
+              <input
+                type="text"
+                name="requester"
+                value={formData.requester}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 border rounded-xl"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Department
+              </label>
+              <input
+                type="text"
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 border rounded-xl"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Priority</label>
+              <select
+                name="priority"
+                value={formData.priority}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 border rounded-xl"
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Estimated Value
+              </label>
+              <input
+                type="number"
+                name="estimated_value"
+                value={formData.estimated_value}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 border rounded-xl"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Required By
+              </label>
+              <input
+                type="date"
+                name="required_by"
+                value={formData.required_by}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 border rounded-xl"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Status</label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 border rounded-xl"
+              >
+                <option value="draft">Draft</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={() => navigate(`/commerce/procure/${pr_id}`)}
+            className="px-6 py-2.5 border rounded-xl"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex items-center gap-2 px-6 py-2.5 bg-[#3A4E63] text-white rounded-xl font-semibold disabled:opacity-50"
+          >
+            <Save className="w-4 h-4" /> {loading ? "Saving..." : "Save"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default ProcurementEdit;

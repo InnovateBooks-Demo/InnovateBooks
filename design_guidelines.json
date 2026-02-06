@@ -1,0 +1,148 @@
+{
+  "design_system": {
+    "identity": {
+      "name": "ClearTax Enterprise",
+      "tone": "Professional, Trustworthy, Efficient, Modern, Interactive",
+      "core_values": ["Simplicity", "Accuracy", "Speed", "Security"],
+      "target_audience": ["CFOs", "Finance Leaders", "Founders", "Enterprise Decision Makers"]
+    },
+    "theme": {
+      "mode": "light",
+      "strategy": "Enterprise Trust - Clean white backgrounds with strong brand blue accents"
+    },
+    "colors": {
+      "primary": {
+        "brand": "#3A4E63",
+        "hover": "#023075",
+        "light": "#E6F0FF",
+        "gradient_start": "#3A4E63",
+        "gradient_end": "#025bb5"
+      },
+      "secondary": {
+        "background": "#F8FAFC",
+        "surface": "#FFFFFF",
+        "border": "#E2E8F0"
+      },
+      "text": {
+        "heading": "#0F172A",
+        "body": "#334155",
+        "muted": "#64748B",
+        "inverted": "#FFFFFF"
+      },
+      "functional": {
+        "success": "#10B981",
+        "warning": "#F59E0B",
+        "error": "#EF4444",
+        "info": "#3B82F6"
+      }
+    },
+    "typography": {
+      "font_family": {
+        "headings": "Inter, sans-serif",
+        "body": "Inter, sans-serif"
+      },
+      "scale": {
+        "h1": "text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight",
+        "h2": "text-3xl md:text-4xl font-bold tracking-tight",
+        "h3": "text-2xl md:text-3xl font-semibold",
+        "body_lg": "text-lg leading-relaxed",
+        "body_base": "text-base leading-relaxed",
+        "caption": "text-sm text-muted-foreground"
+      }
+    },
+    "layout": {
+      "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+      "section_spacing": "py-16 md:py-24",
+      "grid_gap": "gap-8 md:gap-12",
+      "border_radius": {
+        "card": "rounded-xl",
+        "button": "rounded-lg",
+        "input": "rounded-md"
+      }
+    },
+    "shadows": {
+      "card": "shadow-[0_2px_8px_rgba(0,0,0,0.08)]",
+      "card_hover": "shadow-[0_12px_24px_rgba(3,63,153,0.12)]",
+      "dropdown": "shadow-lg border border-slate-100",
+      "sticky": "shadow-[0_-4px_16px_rgba(0,0,0,0.05)]"
+    },
+    "animations": {
+      "hover_lift": "transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
+      "fade_in_up": "animate-in fade-in slide-in-from-bottom-4 duration-700",
+      "pulse_slow": "animate-pulse duration-[3000ms]",
+      "accordion": "transition-all duration-200 ease-in-out"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#3A4E63] hover:bg-[#023075] text-white font-medium px-6 py-3 rounded-lg transition-all shadow-sm hover:shadow-md",
+      "secondary": "bg-white border border-[#3A4E63] text-[#3A4E63] hover:bg-[#F0F7FF] font-medium px-6 py-3 rounded-lg transition-all",
+      "ghost": "text-[#3A4E63] hover:bg-[#F0F7FF] font-medium px-4 py-2 rounded-lg transition-all"
+    },
+    "cards": {
+      "feature": "bg-white p-8 rounded-xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-300 group",
+      "stat": "bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col items-start gap-2",
+      "testimonial": "bg-[#F8FAFC] p-8 rounded-2xl border border-slate-100 relative"
+    },
+    "inputs": {
+      "default": "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3A4E63] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    }
+  },
+  "interactive_patterns": {
+    "animated_stats": {
+      "description": "Numbers that count up from 0 to the target value when scrolled into view.",
+      "implementation": "Use framer-motion or a custom useCounter hook. Format numbers with Indian locale (lakhs/crores) if applicable."
+    },
+    "hover_cards": {
+      "description": "Cards that lift and show a 'Learn More' arrow or glow effect on hover.",
+      "classes": "hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(3,63,153,0.2)] transition-all duration-300"
+    },
+    "trust_marquee": {
+      "description": "Infinite horizontal scrolling list of partner/client logos.",
+      "implementation": "Use react-fast-marquee or CSS animation with duplicated list items."
+    },
+    "tabbed_content": {
+      "description": "Switchable content sections for different user personas (e.g., Individuals vs Enterprises).",
+      "component": "Shadcn Tabs with custom styling for the trigger list (pill shape)."
+    },
+    "faq_accordion": {
+      "description": "Expandable questions and answers.",
+      "component": "Shadcn Accordion with a clean, minimal border style."
+    },
+    "sticky_cta": {
+      "description": "A bar fixed to the bottom of the viewport on mobile or scroll-triggered on desktop.",
+      "classes": "fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50 md:hidden"
+    }
+  },
+  "assets": {
+    "images": {
+      "hero_bg": "https://images.unsplash.com/photo-1764437358274-0cf9ceda78cf?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "office_meeting": "https://images.unsplash.com/photo-1758518726741-6451f7f71348?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "team_collaboration": "https://images.unsplash.com/photo-1758518726609-c551f858cd5c?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "abstract_tech": "https://images.unsplash.com/photo-1768330187404-59e46cf222c9?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "finance_dashboard": "https://images.unsplash.com/photo-1762278804923-37f066f5e834?crop=entropy&cs=srgb&fm=jpg&q=85"
+    },
+    "logos": {
+      "slack": "https://images.unsplash.com/photo-1705988142466-e468bc654eeb?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "subway": "https://images.unsplash.com/photo-1764344815160-0e2afc6939a0?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "generic_1": "https://images.unsplash.com/photo-1622476512221-5fe08e42f898?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "generic_2": "https://images.unsplash.com/photo-1622476524026-0965961bc7a4?crop=entropy&cs=srgb&fm=jpg&q=85"
+    }
+  },
+  "instructions_to_main_agent": [
+    "1. Apply the 'Enterprise Trust' theme to all pages. Use white backgrounds, generous spacing, and the primary blue (#3A4E63) for actions.",
+    "2. Implement the 'Interactive Patterns' defined above. Every page must have at least one interactive element (hover card, animated stat, or accordion).",
+    "3. Use Shadcn components for base interactivity but style them according to the 'components' section.",
+    "4. Ensure all text meets WCAG AA contrast ratios. The primary blue on white is safe.",
+    "5. For the 'Trust Badges' section, create a marquee component using the provided logo URLs.",
+    "6. Add 'data-testid' attributes to all interactive elements (buttons, inputs, cards).",
+    "7. Do NOT use gradients for backgrounds unless specified in the 'hero_bg' asset. Keep layouts clean and flat.",
+    "8. Use the 'Inter' font family for everything. Ensure headings are bold and tight.",
+    "9. Create a 'StickyCTA' component for mobile views as requested in the problem statement."
+  ],
+  "universal_guidelines": {
+    "accessibility": "Ensure all interactive elements are keyboard accessible and have proper aria-labels.",
+    "responsiveness": "Design mobile-first. Use 'grid-cols-1' on mobile and expand to 'md:grid-cols-3' or 'lg:grid-cols-4' on desktop.",
+    "performance": "Lazy load images and heavy components. Use 'will-change-transform' for animations to prevent jank."
+  }
+}
