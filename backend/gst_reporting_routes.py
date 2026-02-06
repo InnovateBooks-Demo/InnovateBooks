@@ -11,7 +11,7 @@ import os
 
 router = APIRouter(prefix="/api/ib-finance/gst", tags=["GST Reports"])
 
-JWT_SECRET = os.environ.get('JWT_SECRET_KEY', 'innovate_books_super_secret_key_2025_change_in_production')
+JWT_SECRET = os.environ["JWT_SECRET_KEY"]  # must be set in backend/.env
 
 def get_db():
     from server import db
