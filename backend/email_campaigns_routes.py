@@ -29,7 +29,9 @@ async def get_current_user(authorization: str = Header(None)):
     try:
         token = authorization.replace("Bearer ", "")
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        return {"user_id": payload.get("user_id"), "org_id": payload.get("org_id")}
+        return {
+            "user_id": payload.get("user_id"), 
+            "org_id": payload.get("org_id")}
     except:
         raise HTTPException(status_code=401, detail="Invalid token")
 

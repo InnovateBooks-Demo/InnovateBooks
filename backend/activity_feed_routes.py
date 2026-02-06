@@ -23,7 +23,10 @@ async def get_current_user_simple(credentials = Depends(__import__('fastapi.secu
     if not JWT_SECRET:
         raise RuntimeError("JWT_SECRET_KEY is missing in environment")
     payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-    return {"user_id": payload.get("user_id") or payload.get("sub"), "org_id": payload.get("org_id", "default"), "full_name": payload.get("full_name", "User")}
+    return {
+        "user_id": payload.get("user_id") or payload.get("sub"),
+        "org_id": payload.get("org_id", "default"),
+        "full_name": payload.get("full_name", "User")}
 
 @router.get("/feed")
 async def get_activity_feed(
