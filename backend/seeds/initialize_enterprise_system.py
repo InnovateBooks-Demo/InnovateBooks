@@ -42,7 +42,12 @@ async def main():
     # 3. Create Super Admin user
     logger.info("🔐 Step 3: Creating super admin user...")
     super_admin_email = "superadmin@innovatebooks.com"
-    super_admin_password = "SuperAdmin@2025"  # Change in production
+    import os
+
+    super_admin_password = os.environ.get("SUPER_ADMIN_PASSWORD")
+    if not super_admin_password:
+        raise RuntimeError("SUPER_ADMIN_PASSWORD is required for initialization")
+  # Change in production
     
     existing_super_admin = await db.enterprise_users.find_one(
         {"email": super_admin_email},
