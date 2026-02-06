@@ -1,46 +1,108 @@
-# ===== Environment / Secrets =====
+# # ===== Environment / Secrets =====
+# .env
+# .env.*
+# !.env.example
+# *.pem
+# *.key
+
+# # ===== Python =====
+# __pycache__/
+# *.py[cod]
+# .venv/
+# venv/
+# .pytest_cache/
+
+# # ===== Node / Frontend =====
+# node_modules/
+# build/
+# dist/
+# .vite/
+
+# # ===== Logs =====
+# *.log
+# *.out
+
+# # ===== Test artifacts =====
+# test_reports/
+# *.xml
+
+# # ===== Runtime / uploads =====
+# backend/uploads/
+# uploads/
+# memory/
+
+# # ===== OS / Editor =====
+# .DS_Store
+# Thumbs.db
+# .vscode/
+# .idea/
+
+
+
+# /*.txt
+
+
+
+# *.md
+
+
+
+# ===============================
+# Environment / Secrets
+# ===============================
 .env
 .env.*
 !.env.example
 *.pem
 *.key
 
-# ===== Python =====
+# ===============================
+# Python
+# ===============================
 __pycache__/
 *.py[cod]
+.pytest_cache/
 .venv/
 venv/
-.pytest_cache/
 
-# ===== Node / Frontend =====
+# ===============================
+# Node / Frontend
+# ===============================
 node_modules/
 build/
 dist/
 .vite/
 
-# ===== Logs =====
+# ===============================
+# Logs
+# ===============================
 *.log
 *.out
 
-# ===== Test artifacts =====
+# ===============================
+# Test artifacts
+# ===============================
 test_reports/
 *.xml
 
-# ===== Runtime / uploads =====
+# ===============================
+# Runtime / uploads
+# ===============================
 backend/uploads/
 uploads/
 memory/
 
-# ===== OS / Editor =====
+# ===============================
+# OS / Editor
+# ===============================
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
 
-
-
+# ===============================
+# Root scratch / local notes
+# ===============================
 /*.txt
-
-
-
-*.md
+gitignore.txt
+gitconfig.txt
