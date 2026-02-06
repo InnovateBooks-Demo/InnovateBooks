@@ -1,65 +1,22 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# ===== Environment / Secrets =====
 .env
-.venv
-venv/
 .env.*
-
-# Node / React
-node_modules/
-dist/
-build/
-.vite/
-
-# Logs
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Editor
-.vscode/
-.idea/
-
-# Test artifacts
-test_output*.log
-full_test_results.log
-
-# Temporary / cache
-.emergent/
-memory/
-
-# Secrets
+!.env.example
 *.pem
 *.key
 
-
-
-# Local notes / scratch
-*.txt
-gitconfig.txt
-gitignore.txt
-
-
-
 # ===== Python =====
 __pycache__/
+*.py[cod]
+.venv/
+venv/
 .pytest_cache/
-*.pyc
 
 # ===== Node / Frontend =====
 node_modules/
 build/
 dist/
-
-# ===== Environment files =====
-.env
-.env.*
-!.env.example
+.vite/
 
 # ===== Logs =====
 *.log
@@ -70,18 +27,12 @@ test_reports/
 *.xml
 
 # ===== Runtime / uploads =====
+backend/uploads/
 uploads/
 memory/
 
 # ===== OS / Editor =====
 .DS_Store
+Thumbs.db
 .vscode/
 .idea/
-
-
-# test outputs / reports
-test_reports/
-
-
-# runtime uploads
-backend/uploads/
